@@ -1,0 +1,88 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> New Document </title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style type="text/css">
+	body{ font-size:14px;}
+    .zd{ z-index:1;}
+	.zd1{ z-index:1;}
+
+	.wh{ width:240px; height:240px;}
+	
+	.p_box{ position:relative; z-index:0; width:240px; height:240px; border:50px solid #333; background-color:#aaa;}/* 形成层叠上下文的元素的背景和边框 */
+	.in_box1{ position:absolute; z-index:-1; left:20px; top:20px; background-color:green;}/*层叠级别为负值的后代层叠上下文*/
+	.in_box2{ margin:40px 0 0 40px; background-color:red;}/*常规流内非行内非定位的子元素组成的层*/
+	.in_box3{ float:left; margin:-220px 0 -80px 60px; background-color:blue; color:#fff;}/*非定位的浮动子元素和它们的内容组成的层*/
+	.in_box4{  padding:0 20px; background-color:#ccc; border:4px solid #000;}/*常规流内行内非定位子元素组成的层*/
+	.in_box5{ position:absolute; left:80px; top:80px; background-color:orange; z-index:auto;}/*任何z-index是auto的定位子元素，以及z-index是0的层叠上下文组成的层*/
+	.in_box6{ position:absolute; z-index:1; left:100px; top:100px; background-color:#F6C;}/*层叠级别为正值的后代层叠上下文*/
+  </style>
+ </head>
+
+ <body>
+	<!--<div class="zd" style="position:absolute; width:100px; height:100px; background-color:grey;">
+		A
+		<div class="zd1" style="position:relative; width:125px; height:25px; background-color:orange;">C</div>
+		<div style="position:relative; width:125px; height:25px; top:-10px; background-color:blue; color:#fff;">D</div>
+	</div>
+	<div style="position:absolute; width:100px; height:100px; background-color:red; left:90px; top:20px; text-align:right;">B</div>-->
+	<!--
+	A 、B、 C、D 都是定位元素。其中，A 的 'z-index' 是 "1"，所以，A 会创建一个局部的层叠上下文， 
+	因此， C 、D 就处于 A 创建的局部层叠上下文中。同时，A 和 B 处于同一个层叠上下文中，A 的层叠级别是 1， B 的层叠上下文同其父框的层叠上下文。
+	D 在 A 形成的层叠上下文中，层叠级别同 A，是 "0"。所以，从后到前的顺序应该是： B -> A -> D -> C。
+	-->	
+
+
+
+	<div class="p_box">
+		形成层叠上下文的元素的背景和边框
+		<div class="in_box1 wh">层叠级别为负值的后代层叠上下文</div>
+        <div class="in_box2 wh">常规流内非行内非定位的子元素组成的层</div>
+        <div class="in_box3 wh">非定位的浮动子元素和它们的内容组成的层</div>
+		<span class="in_box4">常规流内行内非定位子元素组成的层</span>
+        <div class="in_box5 wh">任何z-index是auto的定位子元素，以及z-index是0的层叠上下文组成的层</div>
+        <div class="in_box6 wh">层叠级别为正值的后代层叠上下文</div>
+	</div>
+    
+    
+    <!--
+		在这个例子中，“在…前面”指的是当用户面向可视窗口的时候离用户更近。
+		
+		层叠的结构，涉及层叠上下文，层叠上下文是一个抽象的容器，它可以包含层，也可以包含其子元素
+	创建的层叠上下文。
+		
+		在层叠上下文内部，各层按照规则在z轴方向上从后向前排列。
+		
+		从一个父层叠上下文的角度来看，层叠上下文本身是其中一个不可分割的最小单位；其他层叠上下文中的框，
+	不可能出现在它里面的框的中间位置。也就是说，层叠上下文本身被看作一个单独的层处理，它在z轴上的顺序与其
+	子层无关。比如第一个例子中，A和B处于全局的层叠上下文中，A和B就是那个层叠上下文中的最小单位；同时，C,D
+	处于同一个层叠上下文中，B中的框不可能在Z轴上处于C和D之间。
+		
+		在文档中，每一个元素属于一个层叠上下文。在给定的层叠上下文中，每个元素都有一个整型的层叠级别，它描述了在
+	相同层叠上下文中元素在“Z轴”上的显示顺序。
+		
+		同一个层叠上下文中，显示级别大的显示在上，层叠级别小的显示在下，相同层叠级别的框会根据文档树中的位置，按照
+	前后倒置的方式显示。
+
+		根元素形成根层叠上下文。其他层叠上下文由任何“z-index”计算后的值不是“auto”的定位元素生成。
+
+		不同层叠上下文中，元素显示顺序以父级层叠上下文的层叠级别来决定显示的先后顺序。与自身的层叠级别无关。
+
+    层叠上下文的构成
+
+        每个层叠上下文都有如下的层组成（显示顺序从后到前）：
+        
+        1.形成层叠上下文的元素的背景和边框
+        2.层叠级别为负值的后代层叠上下文
+        3.常规流内非行内非定位的子元素组成的层
+        4.非定位的浮动子元素和它们的内容组成的层
+        5.常规流内行内非定位子元素组成的层
+        6.任何 z-index 是 auto 的定位子元素，以及 z-index 是 0 的层叠上下文组成的层
+        7.层叠级别为正值的后代层叠上下文
+    -->
+ </body>
+</html>
